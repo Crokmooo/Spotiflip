@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    <link href="public/css/style.css" rel="stylesheet">
-    <!-- Swiper CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+    <?php require_once 'components/head.php'?>
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <title>Mes Collections - Spotiflip</title>
 </head>
 <body class="bg-white text-gray-800 font-montserrat">
 
-<?php require_once 'components/navbar.php'; ?>
+<?php require_once 'components/navbar.php'?>
 
 <main class="p-4 md:p-8">
     <h2 class="text-2xl font-bold text-gray-700 mb-6">Découvrez nos albums</h2>
