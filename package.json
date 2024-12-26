@@ -16,6 +16,7 @@
     "tailwindcss": "^3.4.17"
   },
   "dependencies": {
-    "bootstrap-icons": "^1.11.3"
+    "bootstrap-icons": "^1.11.3",
+    "mongoose": "^8.9.2"
   }
 }
