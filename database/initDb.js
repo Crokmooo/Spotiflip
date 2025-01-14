@@ -8,38 +8,54 @@ mongoose.connect('mongodb+srv://***REMOVED***', {})
 const utilisateurSchema = new mongoose.Schema({
     username: { type: String, required: true },
     password: { type: String, required: true },
-    email: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     created_at: { type: Date, default: Date.now },
     subscription: { type: String },
     genre: { type: [String] },
     default_playlist_id: { type: String },
     playlists: { type: [String] },
-    liked_tracks: { type: [String] }
+    liked_tracks: { type: [String] },
+    session_token: { type: String },
+    favourite_albums: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Album' }], // Référence aux albums favoris
 });
+
 
 const trackSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    artist_id: { type: String, required: true },
+    artist_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Artist', required: true },
     duration: { type: Number, default: 0 },
     genres: { type: [String] },
-    album_id: { type: String },
-    audio_url: { type: String }
+    album_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Album' },
+    audio_url: { type: String, validate: {
+            validator: function (v) {
+                return /^(http|https):\/\/[^ "]+$/.test(v);
+            },
+            message: props => `${props.value} n'est pas une URL valide !`
+        }}
 });
 
+
 const artistSchema = new mongoose.Schema({
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true }, // Ajout d'unicité pour éviter les doublons
     genres: { type: [String] },
-    albums: { type: [String] },
+    albums: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Album' }], // Références à des albums
     listens: { type: Number, default: 0 }
 });
 
+
 const albumSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    artist_id: { type: String, required: true },
+    artist_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Artist', required: true },
     release_date: { type: Date },
-    track_list: { type: [String] },
-    cover_image: { type: String }
+    track_list: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Track' }], // Références à des pistes
+    cover_image: { type: String, validate: {
+            validator: function (v) {
+                return /^(http|https):\/\/[^ "]+$/.test(v);
+            },
+            message: props => `${props.value} n'est pas une URL valide !`
+        }}
 });
+
 
 const playlistSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -63,51 +79,6 @@ async function initDb() {
         await Artist.deleteMany({});
         await Album.deleteMany({});
         await Playlist.deleteMany({});
-
-        // Insertion des données initiales
-        await Utilisateur.create({
-            username: 'exampleUser ',
-            password: 'examplePassword',
-            email: 'example@example.com',
-            created_at: new Date(),
-            subscription: 'free',
-            genre: [],
-            default_playlist_id: '',
-            playlists: [],
-            liked_tracks: []
-        });
-
-        await Track.create({
-            title: 'exampleTrack',
-            artist_id: 'exampleArtistId',
-            duration: 180,
-            genres: ['pop'],
-            album_id: 'exampleAlbumId',
-            audio_url: 'http://example.com/audio'
-        });
-
-        await Artist.create({
-            name: 'exampleArtist',
-            genres: ['pop'],
-            albums: [],
-            listens: 0
-        });
-
-        await Album.create({
-            title: 'exampleAlbum',
-            artist_id: 'exampleArtistId',
-            release_date: new Date(),
-            track_list: [],
-            cover_image: 'http://example.com/cover.jpg'
-        });
-
-        await Playlist.create({
-            name: 'examplePlaylist',
-            user_id: 'exampleUser Id',
-            tracks: [],
-            created_date: new Date(),
-            updated_date: new Date()
-        });
 
         console.log('Collections créées et données initiales insérées avec succès !');
     } catch (err) {

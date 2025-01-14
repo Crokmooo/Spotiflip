@@ -34,8 +34,37 @@
                    class="bi bi-x-lg text-gray-700 hover:text-synthwave-dark cursor-pointer text-2xl hidden"></i>
             </div>
         </div>
-        <!-- Profil -->
-        <i class="bi bi-person-circle text-2xl text-gray-700 hover:text-synthwave-dark cursor-pointer"></i>
+        <?php if (isset($_SESSION['token'])) { ?>
+        <div class="relative" onmouseenter="showMenu()" onmouseleave="hideMenu()">
+            <i class="bi bi-person-circle text-2xl text-gray-700 hover:text-synthwave-dark cursor-pointer"></i>
+            <!-- Menu déroulant -->
+            <ul id="profileMenu"
+                class="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-md shadow-lg hidden transition-opacity duration-300">
+                <li class="px-4 py-2 hover:bg-gray-100">
+                    <a href="/profile">Voir Profil</a>
+                </li>
+                <li class="px-4 py-2 hover:bg-gray-100">
+                    <a href="/addAlbums">Ajouter un album</a>
+                </li>
+                <li class="px-4 py-2 hover:bg-gray-100">
+                    <a href="/logout">Déconnexion</a>
+                </li>
+            </ul>
+        </div>
+        <?php } else { ?>
+        <div class="relative">
+            <a href="/connect"
+               class="text-synthwave-dark border border-synthwave-mid font-medium py-1.5 px-2 rounded-full hover:shadow-synthwave transition-all" style="margin-right: 10px;">
+                Se connecter
+            </a>
+
+            <!-- Bouton Créer un compte -->
+            <a href="/connect?form=register"
+               class="text-synthwave-dark border border-synthwave-mid font-medium py-1.5 px-2 rounded-full hover:shadow-synthwave transition-all">
+                Créer un compte
+            </a>
+        </div>
+        <?php }?>
     </div>
 </header>
 
@@ -60,8 +89,32 @@
     #searchInput.active {
         width: 200px;
     }
+    #profileMenu {
+        opacity: 0;
+    }
+
+    #profileMenu.opacity-100 {
+        opacity: 1;
+    }
 </style>
 <script>
+    let menuTimeout;
+
+    function showMenu() {
+        clearTimeout(menuTimeout);
+        const menu = document.getElementById('profileMenu');
+        menu.classList.remove('hidden');
+        menu.classList.add('opacity-100');
+    }
+
+    function hideMenu() {
+        const menu = document.getElementById('profileMenu');
+        menuTimeout = setTimeout(() => {
+            menu.classList.add('hidden');
+            menu.classList.remove('opacity-100');
+        }, 100);
+    }
+
     function toggleSearchBar() {
         const searchBar = document.getElementById('searchIcon');
         const crossBar = document.getElementById('crossIcon');

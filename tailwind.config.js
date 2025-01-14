@@ -1,6 +1,5 @@
 module.exports = {
-    content: ["./**/*.html"],
-    content: ["./**/*.php"],
+    content: ["./**/*.html", "./**/*.php"], // Regroupe les fichiers HTML et PHP
     theme: {
         extend: {
             colors: {
@@ -27,4 +26,4 @@ module.exports = {
         },
     },
     plugins: [],
-}
+};
