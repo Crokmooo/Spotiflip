@@ -13,7 +13,7 @@ switch ($path) {
         include __DIR__ . '/views/home.php';
         break;
     case 'collections':
-        include __DIR__ . '/views/albums.php';
+        include __DIR__ . '/views/collections.php';
         break;
     case 'news':
         include __DIR__ . '/views/news.php';
