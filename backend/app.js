@@ -7,6 +7,8 @@ const authRoutes = require('./routes/auth'); // Routes d'authentification
 const albumRoutes = require('./routes/album'); // Routes d'albums
 const artistRoutes = require('./routes/artist'); // Import des routes artistes
 const userRoutes = require('./routes/user');
+const playlistRoutes = require('./routes/playlist');
+const trackRoutes = require('./routes/track');
 
 const app = express();
 const cors = require('cors'); // Importez le middleware CORS
@@ -35,6 +37,8 @@ app.use('/api', artistRoutes);
 app.use('/api', albumRoutes);
 app.use('/auth', authRoutes);
 app.use('/api', userRoutes);
+app.use('/api', playlistRoutes);
+app.use('/api', trackRoutes);
 
 // Démarrage du serveur
 const PORT = 3000;

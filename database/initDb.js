@@ -59,10 +59,11 @@ const albumSchema = new mongoose.Schema({
 
 const playlistSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    user_id: { type: String, required: true },
+    author_id: { type: String, required: true },
     tracks: { type: [String] },
     created_date: { type: Date, default: Date.now },
-    updated_date: { type: Date, default: Date.now }
+    updated_date: { type: Date, default: Date.now },
+    cover_image: { type: String }
 });
 
 const Utilisateur = mongoose.model('Utilisateur', utilisateurSchema);

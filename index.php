@@ -9,6 +9,13 @@ if(preg_match('#^album/([a-zA-Z0-9]+)$#', $path)) {
 if(preg_match('#^artist/([a-zA-Z0-9]+)$#', $path)) {
     $path = "artist";
 }
+if(preg_match('#^playlist/([a-zA-Z0-9]+)$#', $path)) {
+    $path = "playlist";
+}
+if (preg_match('#^playlist/([a-zA-Z0-9]+)/edit$#', $path)) {
+    $path = "editPlaylist";
+}
+
 // Routeur avec un switch
 switch ($path) {
     case '':
@@ -30,7 +37,7 @@ switch ($path) {
     case 'logout':
         include __DIR__ . '/managers/logout.php';
         break;
-    case 'addAlbums':
+    case 'addAlbum':
         include __DIR__ . '/views/addAlbums.php';
         break;
     case 'album':
@@ -38,6 +45,15 @@ switch ($path) {
         break;
     case 'artist':
         include __DIR__ . '/views/artist.php';
+        break;
+    case 'playlist':
+        include __DIR__ . '/views/playlist.php';
+        break;
+    case 'createPlaylist':
+        include __DIR__ . '/views/createPlaylists.php';
+        break;
+    case 'editPlaylist':
+        include __DIR__ . '/views/editPlaylist.php';
         break;
 
 
