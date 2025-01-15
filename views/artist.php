@@ -31,7 +31,7 @@ $artistId = $matches[1];
                  class="w-full h-full object-cover rounded-lg shadow-lg bg-gray-100">
             <button id="editImageButton"
                     class="absolute top-2 right-2 bg-synthwave-dark text-white text-sm px-3 py-1 rounded-full shadow hover:bg-synthwave-light focus:outline-none">
-                Modifier
+                <i id="editIcon" class="bi bi-pencil-fill"></i>
             </button>
         </div>
 
@@ -82,6 +82,7 @@ $artistId = $matches[1];
     });
 
     const artistId = "<?php echo $artistId; ?>";
+    const token = "<?php echo $_SESSION['token'];?>";
 
     async function loadArtistPage() {
         try {
@@ -107,13 +108,27 @@ $artistId = $matches[1];
             // Nombre d'écoutes
             document.getElementById('artistListens').textContent = `Nombre d'écoutes : ${artist.listens || 0}`;
 
+            let favouriteAlbums = [];
+            if (token) {
+                const favouritesResponse = await fetch('http://localhost:3000/api/favourites', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                favouriteAlbums = await favouritesResponse.json();
+            }
+
             // Albums
             const albumsContainer = document.getElementById('artistAlbumContainer');
             if (artist.albums.length > 0) {
                 albumsContainer.innerHTML = '';
                 artist.albums.forEach(album => {
-                    album.artist_id = artistId;
-                    const albumElement = createAlbumElement(album, false, '');
+                    album.artist_id = {
+                        "_id" : artistId,
+                        "name" : artist.name,
+                    };
+                    const isFavourite = token && favouriteAlbums.includes(album._id);
+                    const albumElement = createAlbumElement(album, isFavourite, token);
                     albumsContainer.appendChild(albumElement);
                 });
                 swiper.update();
@@ -124,11 +139,19 @@ $artistId = $matches[1];
             // Gestion du bouton Modifier
             const editButton = document.getElementById('editImageButton');
             const editZone = document.getElementById('editImageZone');
+            const editIcon = document.getElementById('editIcon');
             const newImageUrl = document.getElementById('newImageUrl');
             const saveButton = document.getElementById('saveImageButton');
 
             editButton.addEventListener('click', () => {
                 editZone.classList.toggle('hidden');
+                if(editZone.classList.contains('hidden')) {
+                    editIcon.classList.add('bi-pencil-fill');
+                    editIcon.classList.remove('bi-x-lg');
+                } else {
+                    editIcon.classList.add('bi-x-lg');
+                    editIcon.classList.remove('bi-pencil-fill');
+                }
             });
 
             saveButton.addEventListener('click', async () => {
