@@ -19,7 +19,7 @@ router.get('/artist/:id', async (req, res) => {
     try {
         const artistId = req.params.id;
 
-        const artist = await Artist.findById(artistId);
+        const artist = await Artist.findById(artistId).populate('albums');
 
         if (!artist) {
             return res.status(404).json({ error: 'Artiste non trouvé.' });

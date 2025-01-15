@@ -8,18 +8,12 @@ if (!preg_match('#^/artist/([a-zA-Z0-9]+)$#', $urlPath, $matches)) {
 }
 
 $artistId = $matches[1];
-
-// Si l'ID est absent, redirection vers la page 404
-if (!$artistId) {
-    header('Location: /404');
-    exit;
-}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <?php require_once 'components/head.php'; ?>
-    <title id="pageTitle">Artiste - Spotiflip</title>
+    <title>Artiste - Spotiflip</title>
 </head>
 <body class="bg-white text-gray-800 font-montserrat">
 
@@ -27,13 +21,13 @@ if (!$artistId) {
 
 <main class="p-8">
     <!-- Nom de l'artiste -->
-    <h2 id="artistName" class="text-3xl font-bold text-gray-700 mb-6 text-center"></h2>
+    <h2 id="artistName" class="text-3xl font-bold text-gray-700 mb-6 text-center">Chargement...</h2>
 
     <!-- Informations sur l'artiste -->
     <div class="flex flex-col items-center mb-8">
-        <!-- Image de l'artiste avec bouton Edit -->
+        <!-- Image de l'artiste avec bouton Modifier -->
         <div id="artistImageContainer" class="relative group w-64 h-64">
-            <img id="artistImage" src="" alt="Image de l'artiste"
+            <img id="artistImage" src="https://www.svgrepo.com/show/508699/landscape-placeholder.svg" alt="Image de l'artiste"
                  class="w-full h-full object-cover rounded-lg shadow-lg bg-gray-100">
             <button id="editImageButton"
                     class="absolute top-2 right-2 bg-synthwave-dark text-white text-sm px-3 py-1 rounded-full shadow hover:bg-synthwave-light focus:outline-none">
@@ -52,14 +46,10 @@ if (!$artistId) {
         </div>
 
         <!-- Genres de l'artiste -->
-        <div id="artistGenres" class="text-center mt-4">
-            <!-- Les genres seront insérés ici dynamiquement -->
-        </div>
+        <div id="artistGenres" class="text-center mt-4 text-gray-600">Chargement des genres...</div>
 
         <!-- Nombre d'écoutes -->
-        <div id="artistListens" class="text-center text-gray-600 mt-2">
-            <!-- Nombre d'écoutes sera inséré ici -->
-        </div>
+        <div id="artistListens" class="text-center text-gray-600 mt-2">Chargement des écoutes...</div>
     </div>
 
     <!-- Liste des albums -->
@@ -67,6 +57,7 @@ if (!$artistId) {
     <div class="swiper mySwiper">
         <div class="swiper-wrapper" id="artistAlbumContainer">
             <!-- Les albums seront insérés ici dynamiquement -->
+            <p class="text-gray-600 text-center w-full">Chargement des albums...</p>
         </div>
     </div>
 </main>
@@ -94,43 +85,40 @@ if (!$artistId) {
 
     async function loadArtistPage() {
         try {
-            // Charger les informations de l'artiste
             const artistResponse = await fetch(`http://localhost:3000/api/artist/${artistId}`);
             const artist = await artistResponse.json();
 
             if (!artistResponse.ok) throw new Error('Impossible de charger les informations de l’artiste.');
 
-            // Afficher le nom de l'artiste
+            // Nom de l'artiste
             document.getElementById('artistName').textContent = artist.name;
 
-            // Afficher l'image de l'artiste
+            // Image de l'artiste
             const artistImage = document.getElementById('artistImage');
-            artistImage.src = artist.picture || 'https://via.placeholder.com/256';
+            artistImage.src = artist.picture || 'https://www.svgrepo.com/show/508699/landscape-placeholder.svg';
             artistImage.alt = artist.name;
 
-            // Afficher les genres
+            // Genres
             const genresContainer = document.getElementById('artistGenres');
-            if (artist.genres.length > 0) {
-                genresContainer.innerHTML = `Genres : <span class="text-synthwave-dark font-semibold">${artist.genres.join(', ')}</span>`;
-            } else {
-                genresContainer.textContent = 'Genres : Non spécifiés';
-            }
+            genresContainer.innerHTML = artist.genres.length > 0
+                ? `Genres : <span class="text-synthwave-dark font-semibold">${artist.genres.join(', ')}</span>`
+                : 'Genres : Non spécifiés';
 
-            // Afficher le nombre d'écoutes
-            const listensContainer = document.getElementById('artistListens');
-            listensContainer.textContent = `Nombre d'écoutes : ${artist.listens || 0}`;
+            // Nombre d'écoutes
+            document.getElementById('artistListens').textContent = `Nombre d'écoutes : ${artist.listens || 0}`;
 
-            // Charger les albums de l'artiste
-            const albums = artist.albums;
-            const container = document.getElementById('artistAlbumContainer');
-            if (albums && albums.length > 0) {
-                albums.forEach(album => {
-                    const slide = createAlbumElement(album, false, ''); // Utilisation du composant album
-                    container.appendChild(slide);
+            // Albums
+            const albumsContainer = document.getElementById('artistAlbumContainer');
+            if (artist.albums.length > 0) {
+                albumsContainer.innerHTML = '';
+                artist.albums.forEach(album => {
+                    album.artist_id = artistId;
+                    const albumElement = createAlbumElement(album, false, '');
+                    albumsContainer.appendChild(albumElement);
                 });
                 swiper.update();
             } else {
-                container.innerHTML = '<p class="text-gray-600">Cet artiste n\'a pas encore d\'albums enregistrés.</p>';
+                albumsContainer.innerHTML = '<p class="text-gray-600">Cet artiste n\'a pas encore d\'albums enregistrés.</p>';
             }
 
             // Gestion du bouton Modifier

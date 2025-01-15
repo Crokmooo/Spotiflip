@@ -43,6 +43,8 @@
             <h3 class="text-lg font-medium text-gray-700">Créer un compte</h3>
             <input type="text" name="username" placeholder="Nom d'utilisateur"
                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-synthwave-dark">
+            <input type="text" name="gender" placeholder="Genre"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-synthwave-dark">
             <input type="email" name="email" placeholder="Email"
                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-synthwave-dark">
             <input type="password" name="password" placeholder="Mot de passe"

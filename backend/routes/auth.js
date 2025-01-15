@@ -5,7 +5,7 @@ const Utilisateur = require('../models/Utilisateur');
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
-    const { username, email, password, subscription, genre } = req.body;
+    const { username, email, password, subscription, gender } = req.body;
 
     try {
         // Vérifiez si l'utilisateur existe déjà
@@ -23,7 +23,7 @@ router.post('/register', async (req, res) => {
             email,
             password: hashedPassword,
             subscription: subscription || 'free',
-            genre: genre || [],
+            genre: gender || [],
         });
 
         await newUser.save();

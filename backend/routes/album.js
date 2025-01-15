@@ -137,4 +137,18 @@ router.post('/album-details', async (req, res) => {
     }
 });
 
+router.get('/albums/:id', async (req, res) => {
+    try {
+        const album = await Album.findById(req.params.id).populate('artist_id').populate('track_list');
+        if (!album) {
+            return res.status(404).json({ error: "Album non trouvé." });
+        }
+        res.status(200).json(album);
+    } catch (error) {
+        console.error('Erreur lors de la récupération de l\'album :', error);
+        res.status(500).json({ error: "Erreur serveur lors de la récupération de l'album." });
+    }
+});
+
+
 module.exports = router;
