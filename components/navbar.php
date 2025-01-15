@@ -1,7 +1,7 @@
 <header class="bg-white shadow-md py-1.5 px-6 flex items-center justify-between">
     <!-- Logo et titre -->
     <div class="flex items-center space-x-3">
-        <img src="public/images/img.png" alt="Logo" class="w-14 h-14 cursor-pointer" onclick="window.location = '/'">
+        <img src="/public/images/logo.png" alt="Logo" class="w-14 h-14 cursor-pointer" onclick="window.location = '/'">
         <h1 class="text-xl cursor-pointer font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 animate-gradient-move"
             onclick="window.location = '/'">
             Spotiflip</h1>

@@ -39,6 +39,13 @@
                     <input type="text" id="new_artist_name" name="new_artist_name"
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-synthwave-dark"
                            placeholder="Nom de l'artiste">
+
+                    <div>
+                        <label for="genre" class="block font-medium text-gray-700 mt-1">Genre(s) de l'artiste</label>
+                        <input type="text" id="genre" name="genre"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-synthwave-dark"
+                               placeholder="Exemple : Pop, Rock, R&B, ...">
+                    </div>
                 </div>
 
                 <!-- Date de sortie -->
@@ -156,6 +163,13 @@
                 data.tracks.push({ name, url });
             }
         });
+
+        if (data.genre) {
+            data.genres = data.genre.split(',').map(genre => genre.trim());
+            delete data.genre;
+        } else {
+            data.genres = [];
+        }
 
         try {
             const response = await fetch('http://localhost:3000/api/add-album', {

@@ -1,11 +1,14 @@
 <?php
 session_start();
-// Récupère le chemin dans l'URL (par exemple : /albums ou /)
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// Supprime les éventuels `/` en début et fin pour normaliser les routes
 $path = trim($path, '/');
-
+if(preg_match('#^album/([a-zA-Z0-9]+)$#', $path)) {
+    $path = "album";
+}
+if(preg_match('#^artist/([a-zA-Z0-9]+)$#', $path)) {
+    $path = "artist";
+}
 // Routeur avec un switch
 switch ($path) {
     case '':
@@ -29,6 +32,12 @@ switch ($path) {
         break;
     case 'addAlbums':
         include __DIR__ . '/views/addAlbums.php';
+        break;
+    case 'album':
+        include __DIR__ . '/views/album.php';
+        break;
+    case 'artist':
+        include __DIR__ . '/views/artist.php';
         break;
 
 

@@ -9,7 +9,7 @@
 
 <main class="flex-grow flex flex-col items-center justify-center text-center">
     <div class="flex items-center justify-center">
-        <img src="public/images/logo.png" alt="Logo" class="w-64 h-64">
+        <img src="/public/images/logo.png" alt="Logo" class="w-64 h-64">
     </div>
 
     <h2 class="text-2xl font-bold text-gray-700 mt-4">Page non trouvée</h2>

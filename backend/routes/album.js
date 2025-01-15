@@ -10,7 +10,7 @@ const router = express.Router();
 router.post('/add-album', async (req, res) => {
     try {
         console.log('Données reçues :', req.body); // Ajoutez cette ligne
-        const { title, artist_id, new_artist_name, release_date, tracks, cover_image } = req.body;
+        const { title, artist_id, new_artist_name, release_date, tracks, cover_image, genres } = req.body;
 
         const existingAlbum = await Album.findOne({ title });
         if (existingAlbum) {
@@ -19,13 +19,34 @@ router.post('/add-album', async (req, res) => {
 
         let artistId = artist_id;
         if (artist_id === 'new') {
+            const genresList = [];
+            if (genres) {
+                const genresArray = Array.isArray(genres) ? genres : [genres];
+                for (const genre of genresArray) {
+                    genresList.push(genre);
+                }
+            }
             if (!new_artist_name) {
                 return res.status(400).json({ error: 'Le nom du nouvel artiste est requis.' });
             }
-            const newArtist = new Artist({ name: new_artist_name });
+            const newArtist = new Artist({
+                name: new_artist_name,
+                genres: genresList,
+                albums: []
+            });
             await newArtist.save();
             artistId = newArtist._id;
         }
+
+        const newAlbum = new Album({
+            title,
+            artist_id: artistId,
+            release_date: release_date ? new Date(release_date) : undefined,
+            track_list: [],
+            cover_image,
+        });
+        await newAlbum.save();
+        const albumId = newAlbum._id;
 
         const trackIds = [];
         if (tracks) {
@@ -35,20 +56,28 @@ router.post('/add-album', async (req, res) => {
                     title: track.name,
                     artist_id: artistId,
                     audio_url: track.url,
+                    album_id: albumId,
                 });
                 await newTrack.save();
                 trackIds.push(newTrack._id);
             }
         }
 
-        const newAlbum = new Album({
-            title,
-            artist_id: artistId,
-            release_date: release_date ? new Date(release_date) : undefined,
-            track_list: trackIds,
-            cover_image,
-        });
-        await newAlbum.save();
+
+        const album = await Album.findById(albumId);
+        if (album) {
+            console.log(album);
+            for (const trackId of trackIds) {
+                album.track_list.push(trackId);
+            }
+            await album.save();
+        }
+        const artist = await Artist.findById(artistId);
+        if (artist) {
+            artist.albums.push(newAlbum._id);
+            await artist.save();
+        }
+
 
         res.status(201).json({ message: 'Album ajouté avec succès.', album: newAlbum });
     } catch (error) {

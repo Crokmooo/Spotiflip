@@ -1,5 +1,5 @@
 module.exports = {
-    content: ["./**/*.html", "./**/*.php"], // Regroupe les fichiers HTML et PHP
+    content: ["./**/*.html", "./**/*.php", "./components/albumComponent.js"],
     theme: {
         extend: {
             colors: {
@@ -11,7 +11,7 @@ module.exports = {
                 },
             },
             boxShadow: {
-                black: '0 4px 10px rgba(0, 0, 0, 0.2)', // Ombre noire par défaut
+                black: '0 4px 10px rgba(0, 0, 0, 0.2)',
                 synthwave: '3px 3px 12px rgba(112, 8, 183, 0.3), 2px 4px 17px rgba(76, 201, 240, 0.2)',
             },
             animation: {

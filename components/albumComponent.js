@@ -18,6 +18,13 @@ function createAlbumElement(album, isFavourite = false, token = '') {
             </div>
         </div>
     `;
+
+    slide.addEventListener('click', (event) => {
+        if (!event.target.closest('button')) {
+            window.location.href = `/album/${album._id}`;
+        }
+    });
+
     return slide;
 }
 
