@@ -50,8 +50,10 @@ if (!$playlistId) {
     <p class="text-gray-500">© 2024 Spotiflip - Tous droits réservés</p>
 </footer>
 
+<script src="/components/albumComponent.js"></script>
 <script>
     const playlistId = '<?php echo $playlistId; ?>';
+    const token = '<?php echo $_SESSION['token']; ?>';
 
     async function loadPlaylistDetails() {
         if (!playlistId) {
@@ -60,6 +62,22 @@ if (!$playlistId) {
         }
 
         try {
+            const userPlaylistsResponse = await fetch('http://localhost:3000/api/user/playlists', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            const userPlaylists = await userPlaylistsResponse.json();
+            const userPlaylistIds = userPlaylists.map(playlist => playlist._id);
+            const favouritesResponse = await fetch('http://localhost:3000/api/favourites/playlists', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            const favouritePlaylist = await favouritesResponse.json();
+            let favouritePlaylistIds = [];
+            favouritePlaylist.forEach(playlist => {
+                favouritePlaylistIds.push(playlist._id);
+            });
+
             const response = await fetch(`http://localhost:3000/api/playlists/${playlistId}`);
             if (!response.ok) {
                 document.getElementById('playlistDetails').innerHTML = "<p class='text-center text-red-500'>Erreur lors du chargement des détails de la playlist.</p>";
@@ -69,16 +87,24 @@ if (!$playlistId) {
             const playlist = await response.json();
             const container = document.getElementById('playlistDetails');
             document.getElementById('pageTitle').innerHTML = `${playlist.name} - Spotiflip`;
-
+            const isFavourite = favouritePlaylistIds.includes(playlistId);
+            const isOwner = userPlaylistIds.includes(playlistId);
+            console.log(isFavourite);
+            console.log(isOwner);
             // Création du contenu HTML dynamique
             container.innerHTML = `
             <div class="relative mb-6">
                 <!-- Bouton Modifier -->
+                 <button onclick="togglePlaylistFavourite('${playlistId}', '${token || ''}')"
+                        class="absolute top-2 right-2 ${isFavourite ? 'text-red-500' : 'text-gray-500'} hover:text-red-500 focus:outline-none">
+                        <i class="bi bi-${isFavourite ? 'heart-fill' : 'heart'} text-2xl" id="playlist-heart-${playlistId}"></i>
+                </button>
+            ${isOwner ? `
                 <button
                     onclick="window.location.href='/playlist/${playlistId}/edit'"
-                    class="absolute top-2 right-2 text-orange-400 hover:text-red-500 focus:outline-none transition-all ease-in-out">
-                    <i class="bi bi-pen text-2xl" id="pen-${playlist._id}"></i>
-                </button>
+                    class="absolute top-2 right-12 text-orange-400 hover:text-red-500 focus:outline-none transition-all ease-in-out">
+                    <i class="bi bi-pen text-2xl" id="pen-${playlistId}"></i>
+                </button>` : ''}
 
                 <!-- Détails de la Playlist -->
                 <div class="flex items-center space-x-4">

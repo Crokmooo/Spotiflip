@@ -63,6 +63,7 @@ router.get('/playlists', async (req, res) => {
         res.status(500).json({ error: 'Erreur interne du serveur.' });
     }
 });
+
 router.post('/playlists', async (req, res) => {
     try {
         const { name, description, session_token, visibility, cover_image } = req.body;
