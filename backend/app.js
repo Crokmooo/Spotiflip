@@ -36,6 +36,5 @@ app.use('/api', userRoutes);
 app.use('/api', playlistRoutes);
 app.use('/api', trackRoutes);
 
-// Démarrage du serveur
 const PORT = 3000;
 app.listen(PORT, () => console.log(`Serveur en cours d'exécution sur http://localhost:${PORT}`));

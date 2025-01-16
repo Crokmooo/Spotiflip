@@ -10,27 +10,19 @@ const utilisateurSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     created_at: { type: Date, default: Date.now },
     subscription: { type: String },
-    genre: { type: [String] },
-    default_playlist_id: { type: String },
-    playlists: { type: [String] },
-    liked_tracks: { type: [String] },
+    genre: { type: String },
+    playlists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Playlist' }],
     session_token: { type: String },
     favourite_albums: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Album' }],
+    favourite_playlists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Playlist' }],
 });
 
 
 const trackSchema = new mongoose.Schema({
     title: { type: String, required: true },
     artist_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Artist', required: true },
-    duration: { type: Number, default: 0 },
-    genres: { type: [String] },
     album_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Album' },
-    audio_url: { type: String, validate: {
-            validator: function (v) {
-                return /^(http|https):\/\/[^ "]+$/.test(v);
-            },
-            message: props => `${props.value} n'est pas une URL valide !`
-        }}
+    audio_url: { type: String },
 });
 
 
@@ -38,7 +30,8 @@ const artistSchema = new mongoose.Schema({
     name: { type: String, required: true, unique: true },
     genres: { type: [String] },
     albums: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Album' }],
-    listens: { type: Number, default: 0 }
+    listens: { type: Number, default: 0 },
+    picture: { type: String }
 });
 
 
@@ -47,23 +40,18 @@ const albumSchema = new mongoose.Schema({
     artist_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Artist', required: true },
     release_date: { type: Date },
     track_list: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Track' }],
-    cover_image: { type: String, validate: {
-            validator: function (v) {
-                return /^(http|https):\/\/[^ "]+$/.test(v);
-            },
-            message: props => `${props.value} n'est pas une URL valide !`
-        }}
+    cover_image: { type: String },
 });
-
 
 const playlistSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    author_id: { type: String, required: true },
-    tracks: { type: [String] },
-    created_date: { type: Date, default: Date.now },
-    updated_date: { type: Date, default: Date.now },
+    description: { type: String },
+    creator: { type: mongoose.Schema.Types.ObjectId, ref: 'Utilisateur', required: true },
+    tracks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Track' }],
+    visibility: { type: Boolean, default: true },
+    likes: { type: Number, default: 0 },
     cover_image: { type: String }
-});
+}, { timestamps: true });
 
 const Utilisateur = mongoose.model('Utilisateur', utilisateurSchema);
 const Track = mongoose.model('Track', trackSchema);
