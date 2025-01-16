@@ -44,8 +44,14 @@ router.get('/playlists/:id', async (req, res) => {
 
 router.get('/playlists', async (req, res) => {
     try {
-        // Récupérer toutes les playlists
-        const playlists = await Playlist.find()
+        // Vérifier si un paramètre de visibilité est passé
+        const { visibility } = req.query;
+
+        // Construire le filtre
+        const filter = visibility !== undefined ? { visibility: Number(visibility) } : {};
+
+        // Récupérer les playlists selon le filtre
+        const playlists = await Playlist.find(filter)
             .populate('creator', 'username') // Inclut le champ 'username' du créateur
             .populate({
                 path: 'tracks',
@@ -56,7 +62,7 @@ router.get('/playlists', async (req, res) => {
             }) // Inclut les informations des tracks et des albums
             .select('name cover_image description tracks visibility likes createdAt'); // Limiter les champs retournés
 
-        // Retourner toutes les playlists
+        // Retourner les playlists filtrées
         res.status(200).json({ playlists });
     } catch (error) {
         console.error('Erreur lors de la récupération des playlists :', error);

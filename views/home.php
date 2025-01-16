@@ -12,9 +12,19 @@
     <h2 class="text-2xl font-bold text-gray-700">Bienvenue sur Spotiflip</h2>
     <p class="text-xl mt-4 text-gray-600 mb-7">Découvrez les meilleurs albums de Spotiflip !</p>
 
-    <div class="swiper mySwiper">
+    <!-- Albums -->
+    <div class="swiper albumSwiper">
         <div class="swiper-wrapper" id="albumContainer">
             <!-- Albums dynamiques insérés ici -->
+        </div>
+    </div>
+
+    <p class="text-xl mt-4 text-gray-600 mb-7 mt-10">Découvrez les playlists partagées par d'autres utilisateurs.</p>
+
+    <!-- Playlists -->
+    <div class="swiper mySwiper playlistsSwiper hidden">
+        <div class="swiper-wrapper" id="playlistContainer">
+            <!-- Playlists dynamiques insérées ici -->
         </div>
     </div>
 </main>
@@ -26,7 +36,7 @@
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="../components/albumComponent.js"></script>
 <script>
-    const swiper = new Swiper('.mySwiper', {
+    const albumSwiper = new Swiper('.albumSwiper', {
         slidesPerView: 2,
         spaceBetween: 24,
         breakpoints: {
@@ -38,10 +48,21 @@
         pagination: false,
     });
 
+    const playlistSwiper = new Swiper('.playlistsSwiper', {
+        slidesPerView: 2,
+        spaceBetween: 24,
+        breakpoints: {
+            640: {slidesPerView: 2},
+            768: {slidesPerView: 3},
+            1024: {slidesPerView: 5},
+        },
+        navigation: false,
+        pagination: false,
+    });
+    const token = "<?php echo isset($_SESSION['token']) ? $_SESSION['token'] : ''; ?>";
+
     async function loadAlbums() {
         try {
-            const token = "<?php echo isset($_SESSION['token']) ? $_SESSION['token'] : ''; ?>";
-
             // Récupération des albums
             const albumsResponse = await fetch('http://localhost:3000/api/albums');
             const albums = await albumsResponse.json();
@@ -57,20 +78,72 @@
                 favouriteAlbums = await favouritesResponse.json();
             }
 
-            const container = document.getElementById('albumContainer');
+            const albumContainer = document.getElementById('albumContainer');
             albums.forEach(album => {
                 const isFavourite = token && favouriteAlbums.includes(album._id);
                 const albumElement = createAlbumElement(album, isFavourite, token);
-                container.appendChild(albumElement);
+                albumContainer.appendChild(albumElement);
             });
 
-            swiper.update();
+            albumSwiper.update();
         } catch (error) {
             console.error('Erreur lors du chargement des albums :', error);
         }
     }
 
-    document.addEventListener('DOMContentLoaded', loadAlbums);
+    async function loadPublicPlaylists() {
+        try {
+            const userPlaylistsResponse = token && await fetch('http://localhost:3000/api/user/playlists', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            const userPlaylists = token && await userPlaylistsResponse.json();
+            const userPlaylistIds = token && userPlaylists.map(playlist => playlist._id);
+            const favouritesResponse = token && await fetch('http://localhost:3000/api/favourites/playlists', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            const favouritePlaylist = token && await favouritesResponse.json();
+            let favouritePlaylistIds = [];
+            if(token) {
+                favouritePlaylist.forEach(playlist => {
+                    favouritePlaylistIds.push(playlist._id);
+                });
+            }
+
+            const playlistsResponse = await fetch('http://localhost:3000/api/playlists?visibility=1');
+            if (!playlistsResponse.ok) {
+                console.error("Erreur lors de la récupération des playlists publiques.");
+                return;
+            }
+
+            const playlists = await playlistsResponse.json();
+            const playlistContainer = document.getElementById('playlistContainer');
+            const playlistSwiperContainer = document.querySelector('.playlistsSwiper');
+
+            if (playlists.length === 0) {
+                console.log("Aucune playlist publique disponible.");
+                return;
+            }
+
+            playlists.playlists.forEach(playlist => {
+                const isFavourite = token && favouritePlaylistIds.includes(playlist._id);
+                const isOwner = token && userPlaylistIds.includes(playlist._id);
+                const playlistElement = createPlaylistElement(playlist, isFavourite, isOwner);
+                playlistContainer.appendChild(playlistElement);
+            });
+
+            playlistSwiperContainer.classList.remove('hidden');
+            playlistSwiper.update();
+        } catch (error) {
+            console.error("Erreur lors du chargement des playlists publiques :", error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadAlbums();
+        loadPublicPlaylists();
+    });
 </script>
 </body>
 </html>

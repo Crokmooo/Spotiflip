@@ -13,4 +13,20 @@ router.get('/tracks', async (req, res) => {
     }
 });
 
+router.get('/searchTracks', async (req, res) => {
+    try {
+        const { search } = req.query;
+        if (!search) {
+            return res.status(400).json({ error: 'Recherche vide' });
+        }
+
+        const tracks = await Track.find({ title: { $regex: search, $options: 'i' } }).populate('album_id').select('title album_id');
+        res.status(200).json(tracks);
+    } catch (error) {
+        console.error('Erreur lors de la recherche des pistes :', error);
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
+});
+
+
 module.exports = router;

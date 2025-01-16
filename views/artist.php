@@ -82,7 +82,7 @@ $artistId = $matches[1];
     });
 
     const artistId = "<?php echo $artistId; ?>";
-    const token = "<?php echo $_SESSION['token'];?>";
+    const token = "<?php echo isset($_SESSION['token']) ? $_SESSION['token'] : ''; ?>";
 
     async function loadArtistPage() {
         try {

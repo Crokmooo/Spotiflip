@@ -53,7 +53,7 @@ if (!$playlistId) {
 <script src="/components/albumComponent.js"></script>
 <script>
     const playlistId = '<?php echo $playlistId; ?>';
-    const token = '<?php echo $_SESSION['token']; ?>';
+    const token = "<?php echo isset($_SESSION['token']) ? $_SESSION['token'] : ''; ?>";
 
     async function loadPlaylistDetails() {
         if (!playlistId) {
@@ -62,21 +62,23 @@ if (!$playlistId) {
         }
 
         try {
-            const userPlaylistsResponse = await fetch('http://localhost:3000/api/user/playlists', {
+            const userPlaylistsResponse = token && await fetch('http://localhost:3000/api/user/playlists', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
-            const userPlaylists = await userPlaylistsResponse.json();
-            const userPlaylistIds = userPlaylists.map(playlist => playlist._id);
-            const favouritesResponse = await fetch('http://localhost:3000/api/favourites/playlists', {
+            const userPlaylists = token && await userPlaylistsResponse.json();
+            const userPlaylistIds = token && userPlaylists.map(playlist => playlist._id);
+            const favouritesResponse = token && await fetch('http://localhost:3000/api/favourites/playlists', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
-            const favouritePlaylist = await favouritesResponse.json();
+            const favouritePlaylist = token && await favouritesResponse.json();
             let favouritePlaylistIds = [];
-            favouritePlaylist.forEach(playlist => {
-                favouritePlaylistIds.push(playlist._id);
-            });
+            if(token) {
+                favouritePlaylist.forEach(playlist => {
+                    favouritePlaylistIds.push(playlist._id);
+                });
+            }
 
             const response = await fetch(`http://localhost:3000/api/playlists/${playlistId}`);
             if (!response.ok) {
@@ -85,12 +87,14 @@ if (!$playlistId) {
             }
 
             const playlist = await response.json();
+            if (playlist.visibility.toString() === 'false' && token !== 'Bearer ' + playlist.creator.session_token) {
+                window.location.href = '/connect';
+            }
             const container = document.getElementById('playlistDetails');
             document.getElementById('pageTitle').innerHTML = `${playlist.name} - Spotiflip`;
             const isFavourite = favouritePlaylistIds.includes(playlistId);
             const isOwner = userPlaylistIds.includes(playlistId);
-            console.log(isFavourite);
-            console.log(isOwner);
+
             // Création du contenu HTML dynamique
             container.innerHTML = `
             <div class="relative mb-6">

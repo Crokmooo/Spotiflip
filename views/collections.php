@@ -1,3 +1,9 @@
+<?php
+ if (!isset($_SESSION['token'])) {
+     header('Location: /connect');
+     exit;
+ }
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -34,6 +40,18 @@
         </div>
     </div>
 
+    <h2 class="text-2xl font-bold text-gray-700 mb-6 mt-16">Vos playlists likées 🧡</h2>
+
+    <div id="likedPlaylistMessageContainer" class="text-center text-gray-500 text-lg mb-6 hidden">
+        <!-- Message vide ajouté ici dynamiquement -->
+    </div>
+
+    <div class="swiper mySwiper likedPlaylistsSwiper hidden">
+        <div class="swiper-wrapper" id="likedPlaylistContainer">
+            <!-- Playlists likées dynamiques insérées ici -->
+        </div>
+    </div>
+
 </main>
 
 <footer class="bg-white mt-8 py-4 border-t border-gray-300 text-center">
@@ -44,6 +62,17 @@
 <script src="../components/albumComponent.js"></script>
 <script>
     const albumSwiper = new Swiper('.albumsSwiper', {
+        slidesPerView: 2,
+        spaceBetween: 24,
+        breakpoints: {
+            640: { slidesPerView: 2 },
+            768: { slidesPerView: 3 },
+            1024: { slidesPerView: 5 },
+        },
+        navigation: false,
+        pagination: false,
+    });
+    const likedPlaylistSwiper = new Swiper('.likedPlaylistsSwiper', {
         slidesPerView: 2,
         spaceBetween: 24,
         breakpoints: {
@@ -132,7 +161,7 @@
 
     async function loadUserPlaylists() {
         try {
-            const token = "<?php echo $_SESSION['token']; ?>";
+            const token = "<?php echo isset($_SESSION['token']) ? $_SESSION['token'] : ''; ?>";
             const playlistMessageContainer = document.getElementById('playlistMessageContainer');
             const playlistContainer = document.getElementById('playlistContainer');
             const playlistSwiperContainer = document.querySelector('.playlistsSwiper');
@@ -200,7 +229,7 @@
                 const isFavourite = favouritePlaylistIds.includes(playlist._id);
                 const isOwner = userPlaylistIds.includes(playlist._id);
                 const playlistElement = createPlaylistElement(playlist, isFavourite, isOwner, token);
-                playlistContainer.appendChild(playlistElement);
+                if (isOwner) playlistContainer.appendChild(playlistElement);
             });
 
             playlistSwiper.update();
@@ -212,9 +241,56 @@
         }
     }
 
+    async function loadLikedPlaylists() {
+        try {
+            const token = "<?php echo isset($_SESSION['token']) ? $_SESSION['token'] : ''; ?>";
+            const likedPlaylistMessageContainer = document.getElementById('likedPlaylistMessageContainer');
+            const likedPlaylistContainer = document.getElementById('likedPlaylistContainer');
+            const likedPlaylistSwiperContainer = document.querySelector('.likedPlaylistsSwiper');
+
+            if (!token) {
+                likedPlaylistMessageContainer.textContent = "Vous devez être connecté pour voir vos playlists likées.";
+                likedPlaylistMessageContainer.classList.remove('hidden');
+                return;
+            }
+
+            const response = await fetch('http://localhost:3000/api/favourites/playlists', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (!response.ok) {
+                likedPlaylistMessageContainer.textContent = "Erreur lors du chargement de vos playlists likées.";
+                likedPlaylistMessageContainer.classList.remove('hidden');
+                return;
+            }
+
+            const likedPlaylists = await response.json();
+
+            if (likedPlaylists.length === 0) {
+                likedPlaylistMessageContainer.textContent = "Vous n'avez liké aucune playlist pour le moment.";
+                likedPlaylistMessageContainer.classList.remove('hidden');
+                return;
+            }
+
+            likedPlaylists.forEach(playlist => {
+                const playlistElement = createPlaylistElement(playlist, true, false, token);
+                likedPlaylistContainer.appendChild(playlistElement);
+            });
+
+            likedPlaylistSwiperContainer.classList.remove('hidden');
+            likedPlaylistSwiper.update();
+        } catch (error) {
+            console.error('Erreur lors du chargement des playlists likées :', error);
+            const likedPlaylistMessageContainer = document.getElementById('likedPlaylistMessageContainer');
+            likedPlaylistMessageContainer.textContent = "Une erreur s'est produite.";
+            likedPlaylistMessageContainer.classList.remove('hidden');
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         loadLikedAlbums();
         loadUserPlaylists();
+        loadLikedPlaylists();
     });
 </script>
 </body>
