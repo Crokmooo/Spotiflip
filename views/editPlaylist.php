@@ -47,7 +47,6 @@ if (!$playlistId) {
 
 <main class="p-4 md:p-8 relative">
     <div id="editPlaylistFormContainer" class="relative max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
-        <!-- Preview de l'image de couverture -->
         <div class="absolute top-4 right-4 w-24 h-24 border-2 border-gray-300 rounded-lg overflow-hidden shadow">
             <img id="coverImagePreview" src="https://www.svgrepo.com/show/508699/landscape-placeholder.svg" alt="Aperçu de l'image" class="w-full h-full object-cover">
         </div>
@@ -55,7 +54,6 @@ if (!$playlistId) {
         <h2 class="text-2xl font-bold text-gray-700 mb-6">Modifier la Playlist</h2>
         <form id="editPlaylistForm">
             <div class="space-y-4">
-                <!-- Titre de la playlist -->
                 <div>
                     <label for="name" class="block font-medium text-gray-700">Titre</label>
                     <input type="text" id="name" name="name"
@@ -63,14 +61,12 @@ if (!$playlistId) {
                            required>
                 </div>
 
-                <!-- Description -->
                 <div>
                     <label for="description" class="block font-medium text-gray-700">Description</label>
                     <textarea id="description" name="description"
                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-synthwave-dark"></textarea>
                 </div>
 
-                <!-- Visibilité -->
                 <div>
                     <label for="visibility" class="block font-medium text-gray-700">Visibilité</label>
                     <select id="visibility" name="visibility"
@@ -80,7 +76,6 @@ if (!$playlistId) {
                     </select>
                 </div>
 
-                <!-- URL de l'image de couverture -->
                 <div>
                     <label for="cover_image" class="block font-medium text-gray-700">Image de couverture</label>
                     <input type="text" id="cover_image" name="cover_image"
@@ -101,7 +96,6 @@ if (!$playlistId) {
                     </button>
                 </div>
 
-                <!-- Bouton Sauvegarder -->
                 <button type="button" onclick="submitEditPlaylistForm()"
                         class="mt-2 text-synthwave-dark border border-synthwave-mid font-medium py-1 px-4 rounded-full hover:shadow-synthwave transition-all">
                     Sauvegarder
@@ -147,7 +141,7 @@ if (!$playlistId) {
         <select name="tracks[]" class="w-full px-3 py-2 border rounded-lg" onchange="updateUsedTrackIds(this)">
             <option value="" disabled selected>-- Sélectionnez une piste --</option>
             ${availableTracks
-            .filter(track => !usedTrackIds.includes(track._id)) // Exclure les pistes déjà utilisées
+            .filter(track => !usedTrackIds.includes(track._id))
             .map(track => `<option value="${track._id}">${track.title}</option>`)
             .join('')}
         </select>
@@ -158,17 +152,14 @@ if (!$playlistId) {
 
         tracksContainer.appendChild(trackField);
 
-        // Mettre à jour tous les menus déroulants existants
         updateDropdownOptions();
     }
 
     function updateUsedTrackIds(selectElement) {
         const selectedTrackId = selectElement.value;
 
-        // Mettre à jour usedTrackIds
         usedTrackIds = Array.from(document.querySelectorAll('#tracksContainer select')).map(select => select.value);
 
-        // Mettre à jour les menus déroulants
         updateDropdownOptions();
     }
 
@@ -176,17 +167,17 @@ if (!$playlistId) {
         const allSelectElements = document.querySelectorAll('#tracksContainer select');
 
         allSelectElements.forEach(selectElement => {
-            const currentValue = selectElement.value; // Conserver la sélection actuelle
+            const currentValue = selectElement.value;
             const optionsHtml = `
             <option value="" disabled ${!currentValue ? 'selected' : ''}>-- Sélectionnez une piste --</option>
             ${availableTracks
-                .filter(track => !usedTrackIds.includes(track._id) || track._id === currentValue) // Inclure la piste sélectionnée
+                .filter(track => !usedTrackIds.includes(track._id) || track._id === currentValue)
                 .map(track => `<option value="${track._id}">${track.title}</option>`)
                 .join('')}
         `;
             selectElement.innerHTML = optionsHtml;
             if (currentValue) {
-                selectElement.value = currentValue; // Réappliquer la sélection si elle existe
+                selectElement.value = currentValue;
             }
         });
     }
@@ -196,13 +187,10 @@ if (!$playlistId) {
         const selectElement = trackField.querySelector('select');
         const selectedTrackId = selectElement.value;
 
-        // Retirer l'élément DOM
         trackField.remove();
 
-        // Mettre à jour usedTrackIds
         usedTrackIds = Array.from(document.querySelectorAll('#tracksContainer select')).map(select => select.value);
 
-        // Mettre à jour les options des menus déroulants
         updateDropdownOptions();
     }
 
@@ -218,10 +206,8 @@ if (!$playlistId) {
             document.getElementById('cover_image').value = playlist.cover_image || '';
             updateCoverImagePreview();
 
-            // Ajouter les pistes existantes à `usedTrackIds`
             usedTrackIds = playlist.tracks.map(track => track._id);
 
-            // Initialiser les pistes existantes comme des menus déroulants
             const tracksContainer = document.getElementById('tracksContainer');
             playlist.tracks.forEach(track => {
                 const trackField = document.createElement('div');
@@ -243,7 +229,6 @@ if (!$playlistId) {
                 tracksContainer.appendChild(trackField);
             });
 
-            // Mettre à jour les options pour refléter les pistes restantes
             updateDropdownOptions();
         } catch (error) {
             console.error('Erreur lors du chargement de la playlist :', error);
@@ -256,7 +241,6 @@ if (!$playlistId) {
 
         const data = Object.fromEntries(formData.entries());
 
-        // Inclure toutes les pistes sélectionnées
         data.tracks = [];
         const allSelectElements = document.querySelectorAll('#tracksContainer select');
         allSelectElements.forEach(selectElement => {

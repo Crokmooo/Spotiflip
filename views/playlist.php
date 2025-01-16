@@ -1,5 +1,4 @@
 <?php
-// Vérification si l'ID de la playlist est passé dans l'URL via le routeur
 $urlPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 if (!preg_match('#^/playlist/([a-zA-Z0-9]+)$#', $urlPath, $matches)) {
     header('Location: /404');
@@ -95,10 +94,8 @@ if (!$playlistId) {
             const isFavourite = favouritePlaylistIds.includes(playlistId);
             const isOwner = userPlaylistIds.includes(playlistId);
 
-            // Création du contenu HTML dynamique
             container.innerHTML = `
             <div class="relative mb-6">
-                <!-- Bouton Modifier -->
                  <button onclick="togglePlaylistFavourite('${playlistId}', '${token || ''}')"
                         class="absolute top-2 right-2 ${isFavourite ? 'text-red-500' : 'text-gray-500'} hover:text-red-500 focus:outline-none">
                         <i class="bi bi-${isFavourite ? 'heart-fill' : 'heart'} text-2xl" id="playlist-heart-${playlistId}"></i>
@@ -110,7 +107,6 @@ if (!$playlistId) {
                     <i class="bi bi-pen text-2xl" id="pen-${playlistId}"></i>
                 </button>` : ''}
 
-                <!-- Détails de la Playlist -->
                 <div class="flex items-center space-x-4">
                     <img src="${playlist.cover_image || 'https://via.placeholder.com/150'}" alt="${playlist.name}"
                          class="w-48 h-48 object-cover rounded-lg">

@@ -11,7 +11,6 @@ router.post('/favourite-album', async (req, res) => {
     }
 
     try {
-        // Trouver l'utilisateur avec le token
         const user = await Utilisateur.findOne({ session_token: token });
 
         if (!user) {
@@ -24,15 +23,14 @@ router.post('/favourite-album', async (req, res) => {
             return res.status(400).json({ error: 'ID de l’album requis.' });
         }
 
-        // Vérifier si l'album est déjà dans les favoris
         const index = user.favourite_albums.indexOf(albumId);
 
         if (index > -1) {
-            user.favourite_albums.splice(index, 1); // Supprimer
+            user.favourite_albums.splice(index, 1);
             await user.save();
             return res.status(200).json({ message: 'Album retiré des favoris.' });
         } else {
-            user.favourite_albums.push(albumId); // Ajouter
+            user.favourite_albums.push(albumId);
             await user.save();
             return res.status(200).json({ message: 'Album ajouté aux favoris.' });
         }
@@ -65,7 +63,7 @@ router.get('/favourites', async (req, res) => {
 
 router.get('/user/playlists', async (req, res) => {
     try {
-        const token = req.headers.authorization?.split(' ')[1]; // Récupère le token de l'en-tête Authorization
+        const token = req.headers.authorization?.split(' ')[1];
 
         if (!token) {
             return res.status(401).json({ error: "Token d'authentification manquant." });
@@ -111,12 +109,10 @@ router.post('/favourite-playlist', async (req, res) => {
         const isFavourite = user.favourite_playlists.includes(playlistId);
 
         if (isFavourite) {
-            // Retirer des favoris
             user.favourite_playlists = user.favourite_playlists.filter(id => id.toString() !== playlistId);
             await user.save();
             return res.status(200).json({ message: 'Playlist retirée des favoris.' });
         } else {
-            // Ajouter aux favoris
             user.favourite_playlists.push(playlistId);
             await user.save();
             return res.status(200).json({ message: 'Playlist ajoutée aux favoris.' });

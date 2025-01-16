@@ -19,7 +19,6 @@ async function handleFormSubmit(event, action) {
             alert(result.message);
 
             if (action === 'login' && result.user.session_token) {
-                // Envoyer le token au backend PHP pour le stocker en session
                 await fetch('/setSession', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -27,7 +26,7 @@ async function handleFormSubmit(event, action) {
                 });
 
                 console.log('Token envoyé à PHP pour stockage en session.');
-                window.location.href = '/'; // Rediriger après connexion
+                window.location.href = '/';
             }
         } else {
             alert(result.error);

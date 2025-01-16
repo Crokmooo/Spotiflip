@@ -3,12 +3,10 @@ function createAlbumElement(album, isFavourite = false, token = '') {
     slide.classList.add('swiper-slide');
     slide.innerHTML = `
         <div class="relative group overflow-hidden rounded-lg shadow-lg w-64 h-64 mx-auto">
-            <!-- Icône de cœur -->
             <button onclick="toggleFavourite('${album._id}', '${token || ''}')"
                     class="absolute top-2 right-2 ${isFavourite ? 'text-red-500' : 'text-gray-500'} hover:text-red-500 focus:outline-none">
                 <i class="bi bi-${isFavourite ? 'heart-fill' : 'heart'} text-2xl" id="heart-${album._id}"></i>
             </button>
-            <!-- Image de l'album -->
             <img src="${album.cover_image}" alt="${album.title}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-white/70 to-transparent group-hover:translate-y-full transition-transform duration-500">
                 <div class="absolute bottom-0 p-4 text-left">
@@ -33,7 +31,6 @@ function createPlaylistElement(playlist, isFavourite, isOwner, token) {
     slide.classList.add('swiper-slide');
     slide.innerHTML = `
         <div class="relative group overflow-hidden rounded-lg shadow-lg w-64 h-64 mx-auto">
-            <!-- Icône de cœur ou de modification -->
             ${isOwner
         ? `<button onclick="openEdit('${playlist._id}')"
                     class="absolute top-2 left-2 text-orange-400 hover:text-red-500 focus:outline-none transition-all ease-in-out">
@@ -43,7 +40,6 @@ function createPlaylistElement(playlist, isFavourite, isOwner, token) {
                     class="absolute top-2 right-2 ${isFavourite ? 'text-red-500' : 'text-gray-500'} hover:text-red-500 focus:outline-none">
                     <i class="bi bi-${isFavourite ? 'heart-fill' : 'heart'} text-2xl" id="playlist-heart-${playlist._id}"></i>
             </button>
-            <!-- Image de la playlist -->
             <img src="${playlist.cover_image}" alt="${playlist.name}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-white/70 to-transparent group-hover:translate-y-full transition-transform duration-500">
                 <div class="absolute bottom-0 p-4 text-left">
@@ -64,7 +60,6 @@ function createPlaylistElement(playlist, isFavourite, isOwner, token) {
 
 function toggleFavourite(albumId, token) {
     if (!token) {
-        // Redirection vers la page de connexion si l'utilisateur n'est pas connecté
         window.location.href = '/connect';
         return;
     }

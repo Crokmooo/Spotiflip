@@ -44,25 +44,21 @@ router.get('/playlists/:id', async (req, res) => {
 
 router.get('/playlists', async (req, res) => {
     try {
-        // Vérifier si un paramètre de visibilité est passé
         const { visibility } = req.query;
 
-        // Construire le filtre
         const filter = visibility !== undefined ? { visibility: Number(visibility) } : {};
 
-        // Récupérer les playlists selon le filtre
         const playlists = await Playlist.find(filter)
-            .populate('creator', 'username') // Inclut le champ 'username' du créateur
+            .populate('creator', 'username')
             .populate({
                 path: 'tracks',
                 populate: {
                     path: 'album_id',
                     select: 'cover_image title',
                 },
-            }) // Inclut les informations des tracks et des albums
-            .select('name cover_image description tracks visibility likes createdAt'); // Limiter les champs retournés
+            })
+            .select('name cover_image description tracks visibility likes createdAt');
 
-        // Retourner les playlists filtrées
         res.status(200).json({ playlists });
     } catch (error) {
         console.error('Erreur lors de la récupération des playlists :', error);
@@ -82,7 +78,6 @@ router.post('/playlists', async (req, res) => {
             return res.status(404).json({ error: 'Créateur introuvable.' });
         }
 
-        // Création d'une nouvelle playlist
         const newPlaylist = new Playlist({
             name,
             description: description || '',
@@ -93,10 +88,9 @@ router.post('/playlists', async (req, res) => {
             cover_image: cover_image || 'https://www.svgrepo.com/show/508699/landscape-placeholder.svg',
         });
 
-        // Enregistrer la playlist dans la base de données
         const savedPlaylist = await newPlaylist.save();
 
-        user.playlists.push(savedPlaylist);
+        user.playlists.push(savedPlaylist._id);
 
         res.status(201).json({ message: 'Playlist créée avec succès.', playlist: savedPlaylist });
     } catch (error) {

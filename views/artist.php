@@ -1,7 +1,6 @@
 <?php
 $urlPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// Vérification de l'ID de l'artiste dans l'URL
 if (!preg_match('#^/artist/([a-zA-Z0-9]+)$#', $urlPath, $matches)) {
     header('Location: /404');
     exit;
@@ -20,12 +19,9 @@ $artistId = $matches[1];
 <?php require_once 'components/navbar.php'; ?>
 
 <main class="p-8">
-    <!-- Nom de l'artiste -->
     <h2 id="artistName" class="text-3xl font-bold text-gray-700 mb-6 text-center">Chargement...</h2>
 
-    <!-- Informations sur l'artiste -->
     <div class="flex flex-col items-center mb-8">
-        <!-- Image de l'artiste avec bouton Modifier -->
         <div id="artistImageContainer" class="relative group w-64 h-64">
             <img id="artistImage" src="https://www.svgrepo.com/show/508699/landscape-placeholder.svg" alt="Image de l'artiste"
                  class="w-full h-full object-cover rounded-lg shadow-lg bg-gray-100">
@@ -35,7 +31,6 @@ $artistId = $matches[1];
             </button>
         </div>
 
-        <!-- Zone pour modifier l'image -->
         <div id="editImageZone" class="hidden mt-4 w-full">
             <input type="text" id="newImageUrl" placeholder="Lien vers l'image"
                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-synthwave-dark">
@@ -45,10 +40,8 @@ $artistId = $matches[1];
             </button>
         </div>
 
-        <!-- Genres de l'artiste -->
         <div id="artistGenres" class="text-center mt-4 text-gray-600">Chargement des genres...</div>
 
-        <!-- Nombre d'écoutes -->
         <div id="artistListens" class="text-center text-gray-600 mt-2">Chargement des écoutes...</div>
     </div>
 
@@ -91,21 +84,17 @@ $artistId = $matches[1];
 
             if (!artistResponse.ok) throw new Error('Impossible de charger les informations de l’artiste.');
 
-            // Nom de l'artiste
             document.getElementById('artistName').textContent = artist.name;
 
-            // Image de l'artiste
             const artistImage = document.getElementById('artistImage');
             artistImage.src = artist.picture || 'https://www.svgrepo.com/show/508699/landscape-placeholder.svg';
             artistImage.alt = artist.name;
 
-            // Genres
             const genresContainer = document.getElementById('artistGenres');
             genresContainer.innerHTML = artist.genres.length > 0
                 ? `Genres : <span class="text-synthwave-dark font-semibold">${artist.genres.join(', ')}</span>`
                 : 'Genres : Non spécifiés';
 
-            // Nombre d'écoutes
             document.getElementById('artistListens').textContent = `Nombre d'écoutes : ${artist.listens || 0}`;
 
             let favouriteAlbums = [];
@@ -118,7 +107,6 @@ $artistId = $matches[1];
                 favouriteAlbums = await favouritesResponse.json();
             }
 
-            // Albums
             const albumsContainer = document.getElementById('artistAlbumContainer');
             if (artist.albums.length > 0) {
                 albumsContainer.innerHTML = '';
@@ -136,7 +124,6 @@ $artistId = $matches[1];
                 albumsContainer.innerHTML = '<p class="text-gray-600">Cet artiste n\'a pas encore d\'albums enregistrés.</p>';
             }
 
-            // Gestion du bouton Modifier
             const editButton = document.getElementById('editImageButton');
             const editZone = document.getElementById('editImageZone');
             const editIcon = document.getElementById('editIcon');

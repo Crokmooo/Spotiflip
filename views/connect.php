@@ -13,19 +13,16 @@
         <h2 class="text-2xl font-bold text-gray-700 mb-6 text-center">Bienvenue sur Spotiflip</h2>
 
         <div class="flex justify-center space-x-4 mb-6">
-            <!-- Bouton Se connecter -->
             <button onclick="showForm('loginForm')"
                     class="text-synthwave-dark border border-synthwave-mid font-medium py-1.5 px-4 rounded-full hover:shadow-synthwave transition-all">
                 Se connecter
             </button>
-            <!-- Bouton Créer un compte -->
             <button onclick="showForm('registerForm')"
                     class="text-synthwave-dark border border-synthwave-mid font-medium py-1.5 px-4 rounded-full hover:shadow-synthwave transition-all">
                 Créer un compte
             </button>
         </div>
 
-        <!-- Formulaire de connexion -->
         <form id="loginForm" method="POST" onsubmit="handleFormSubmit(event, 'login')">
             <h3 class="text-lg font-medium text-gray-700">Connexion</h3>
             <input type="email" name="email" placeholder="Email"

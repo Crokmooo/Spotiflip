@@ -43,11 +43,9 @@
         try {
             const token = "<?php echo isset($_SESSION['token']) ? $_SESSION['token'] : ''; ?>";
 
-            // Récupérer les albums récents
             const albumsResponse = await fetch('http://localhost:3000/api/albums/recent');
             const albums = await albumsResponse.json();
 
-            // Récupérer les albums favoris si un token est présent
             let favouriteAlbums = [];
             if (token) {
                 const favouritesResponse = await fetch('http://localhost:3000/api/favourites', {

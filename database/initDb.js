@@ -4,7 +4,6 @@ mongoose.connect('mongodb+srv://***REMOVED***', {})
     .then(() => console.log('Connecté à MongoDB'))
     .catch(err => console.log('Erreur de connexion à mongoDB', err));
 
-// Définition des schémas
 const utilisateurSchema = new mongoose.Schema({
     username: { type: String, required: true },
     password: { type: String, required: true },
@@ -16,7 +15,7 @@ const utilisateurSchema = new mongoose.Schema({
     playlists: { type: [String] },
     liked_tracks: { type: [String] },
     session_token: { type: String },
-    favourite_albums: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Album' }], // Référence aux albums favoris
+    favourite_albums: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Album' }],
 });
 
 
@@ -36,9 +35,9 @@ const trackSchema = new mongoose.Schema({
 
 
 const artistSchema = new mongoose.Schema({
-    name: { type: String, required: true, unique: true }, // Ajout d'unicité pour éviter les doublons
+    name: { type: String, required: true, unique: true },
     genres: { type: [String] },
-    albums: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Album' }], // Références à des albums
+    albums: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Album' }],
     listens: { type: Number, default: 0 }
 });
 
@@ -47,7 +46,7 @@ const albumSchema = new mongoose.Schema({
     title: { type: String, required: true },
     artist_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Artist', required: true },
     release_date: { type: Date },
-    track_list: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Track' }], // Références à des pistes
+    track_list: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Track' }],
     cover_image: { type: String, validate: {
             validator: function (v) {
                 return /^(http|https):\/\/[^ "]+$/.test(v);
@@ -74,7 +73,6 @@ const Playlist = mongoose.model('Playlist', playlistSchema);
 
 async function initDb() {
     try {
-        // Suppression des collections existantes
         await Utilisateur.deleteMany({});
         await Track.deleteMany({});
         await Artist.deleteMany({});

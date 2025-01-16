@@ -4,10 +4,9 @@ const Album = require('../models/Album');
 
 const router = express.Router();
 
-// Récupérer tous les artistes
 router.get('/artists', async (req, res) => {
     try {
-        const artists = await Artist.find().select('name'); // Récupère uniquement les noms
+        const artists = await Artist.find().select('name');
         res.status(200).json(artists);
     } catch (error) {
         console.error('Erreur lors de la récupération des artistes :', error);
@@ -36,7 +35,6 @@ router.get('/artist/:id/albums', async (req, res) => {
     try {
         const artistId = req.params.id;
 
-        // Rechercher tous les albums associés à l'artiste
         const albums = await Album.find({ artist_id: artistId }).sort({ release_date: -1 });
 
         res.status(200).json(albums);
@@ -55,7 +53,6 @@ router.post('/artist/:id/update-image', async (req, res) => {
             return res.status(400).json({ error: 'Le lien de l\'image est requis.' });
         }
 
-        // Mettre à jour l'image de l'artiste
         const artist = await Artist.findByIdAndUpdate(
             artistId,
             { picture : image_url },

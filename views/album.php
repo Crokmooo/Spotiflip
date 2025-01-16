@@ -1,5 +1,4 @@
 <?php
-// Vérifier si l'ID de l'album est passé dans l'URL via le routeur
 $urlPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 if (!preg_match('#^/album/([a-zA-Z0-9]+)$#', $urlPath, $matches)) {
     header('Location: /404');
@@ -53,7 +52,6 @@ if (!$albumId) {
 <script>
     const albumId = '<?php echo $albumId?>';
 
-    // Fonction pour charger les détails de l'album
     async function loadAlbumDetails() {
         if (!albumId) {
             document.getElementById('albumDetails').innerHTML = "<p class='text-center text-red-500'>ID de l'album non fourni.</p>";
@@ -70,7 +68,6 @@ if (!$albumId) {
             const album = await response.json();
             const container = document.getElementById('albumDetails');
             document.getElementById('pageTitle').innerHTML = `${album.title} - Spotiflip`;
-            // Créer le contenu HTML
             container.innerHTML = `
                 <div class="mb-6">
                     <div class="flex items-center space-x-4">

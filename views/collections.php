@@ -172,7 +172,6 @@
                 return;
             }
 
-            // Requête pour récupérer les playlists créées par l'utilisateur
             const userPlaylistsResponse = await fetch('http://localhost:3000/api/user/playlists', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -184,9 +183,8 @@
             }
 
             const userPlaylists = await userPlaylistsResponse.json();
-            const userPlaylistIds = userPlaylists.map(playlist => playlist._id); // IDs des playlists créées
+            const userPlaylistIds = userPlaylists.map(playlist => playlist._id);
 
-            // Requête pour récupérer toutes les playlists favorites
             const favouritesResponse = await fetch('http://localhost:3000/api/favourites/playlists', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -203,7 +201,6 @@
                 favouritePlaylistIds.push(playlist._id);
             });
 
-            // Requête pour récupérer toutes les playlists à afficher
             const allPlaylistsResponse = await fetch('http://localhost:3000/api/playlists', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });

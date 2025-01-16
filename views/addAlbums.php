@@ -14,7 +14,6 @@
 
         <form id="addAlbumForm" method="POST">
             <div class="space-y-4">
-                <!-- Titre de l'album -->
                 <div>
                     <label for="title" class="block font-medium text-gray-700">Titre de l'album</label>
                     <input type="text" id="title" name="title"
@@ -22,7 +21,6 @@
                            placeholder="Nom de l'album" required>
                 </div>
 
-                <!-- Artiste -->
                 <div>
                     <label for="artist_id" class="block font-medium text-gray-700">Artiste</label>
                     <select id="artist_id" name="artist_id" onchange="toggleNewArtistField()"
@@ -33,7 +31,6 @@
                     </select>
                 </div>
 
-                <!-- Champ pour un nouvel artiste -->
                 <div id="newArtistField" style="display: none;">
                     <label for="new_artist_name" class="block font-medium text-gray-700">Nom du nouvel artiste</label>
                     <input type="text" id="new_artist_name" name="new_artist_name"
@@ -48,14 +45,12 @@
                     </div>
                 </div>
 
-                <!-- Date de sortie -->
                 <div>
                     <label for="release_date" class="block font-medium text-gray-700">Date de sortie</label>
                     <input type="date" id="release_date" name="release_date"
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-synthwave-dark">
                 </div>
 
-                <!-- Pistes -->
                 <div>
                     <label class="block font-medium text-gray-700">Pistes</label>
                     <div id="tracksContainer" class="space-y-4">
@@ -67,7 +62,6 @@
                     </button>
                 </div>
 
-                <!-- URL de l'image de couverture -->
                 <div>
                     <label for="cover_image" class="block font-medium text-gray-700">URL de l'image de couverture</label>
                     <input type="text" id="cover_image" name="cover_image"
@@ -75,7 +69,6 @@
                            placeholder="URL de l'image">
                 </div>
 
-                <!-- Bouton Soumettre -->
                 <button type="button" onclick="submitAlbumForm()"
                         class="text-synthwave-dark border border-synthwave-mid font-medium py-1.5 px-4 rounded-full hover:shadow-synthwave transition-all mx-auto block">
                     Ajouter l'album
@@ -102,8 +95,8 @@
             const artistSelect = document.getElementById('artist_id');
             artists.forEach(artist => {
                 const option = document.createElement('option');
-                option.value = artist._id; // Utilisez l'ID de l'artiste
-                option.textContent = artist.name; // Nom de l'artiste
+                option.value = artist._id;
+                option.textContent = artist.name;
                 artistSelect.appendChild(option);
             });
         } catch (error) {
@@ -151,11 +144,9 @@
         const form = document.getElementById('addAlbumForm');
         const formData = new FormData(form);
 
-        // Convertir FormData en objet JSON
         const data = Object.fromEntries(formData.entries());
-        data.tracks = []; // Initialise les pistes
+        data.tracks = [];
 
-        // Ajouter chaque piste au tableau tracks
         document.querySelectorAll('#tracksContainer div').forEach(trackDiv => {
             const name = trackDiv.querySelector('input[name$="[name]"]').value;
             const url = trackDiv.querySelector('input[name$="[url]"]').value;
@@ -175,9 +166,9 @@
             const response = await fetch('http://localhost:3000/api/add-album', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json', // Spécifiez JSON
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data), // Convertissez en JSON
+                body: JSON.stringify(data),
             });
 
             const result = await response.json();

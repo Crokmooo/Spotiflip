@@ -14,7 +14,6 @@
 
         <form id="createPlaylistForm" method="POST">
             <div class="space-y-4">
-                <!-- Titre de la playlist -->
                 <div>
                     <label for="name" class="block font-medium text-gray-700">Titre de la Playlist</label>
                     <input type="text" id="name" name="name"
@@ -22,7 +21,6 @@
                            placeholder="Nom de la playlist" required>
                 </div>
 
-                <!-- Description -->
                 <div>
                     <label for="description" class="block font-medium text-gray-700">Description</label>
                     <textarea id="description" name="description"
@@ -30,7 +28,6 @@
                               placeholder="Décrivez votre playlist" rows="4"></textarea>
                 </div>
 
-                <!-- URL de l'image de couverture -->
                 <div>
                     <label for="cover_image" class="block font-medium text-gray-700">URL de l'image de couverture</label>
                     <input type="text" id="cover_image" name="cover_image"
@@ -38,7 +35,6 @@
                            placeholder="URL de l'image">
                 </div>
 
-                <!-- Visibilité -->
                 <div>
                     <label for="visibility" class="block font-medium text-gray-700">Visibilité</label>
                     <select id="visibility" name="visibility"
@@ -48,7 +44,6 @@
                     </select>
                 </div>
 
-                <!-- Bouton Soumettre -->
                 <button type="button" onclick="submitPlaylistForm()"
                         class="text-synthwave-dark border border-synthwave-mid font-medium py-1.5 px-4 rounded-full hover:shadow-synthwave transition-all mx-auto block">
                     Créer la Playlist
@@ -67,7 +62,6 @@
         const form = document.getElementById('createPlaylistForm');
         const formData = new FormData(form);
 
-        // Convertir FormData en objet JSON
         const data = Object.fromEntries(formData.entries());
         data.visibility = data.visibility === "true";
         data.session_token = '<?php echo $_SESSION['token']?>'

@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post('/add-album', async (req, res) => {
     try {
-        console.log('Données reçues :', req.body); // Ajoutez cette ligne
+        console.log('Données reçues :', req.body);
         const { title, artist_id, new_artist_name, release_date, tracks, cover_image, genres } = req.body;
 
         const existingAlbum = await Album.findOne({ title });
@@ -98,7 +98,7 @@ router.get('/albums', async (req, res) => {
 
 router.get('/albums/recent', async (req, res) => {
     try {
-        const token = req.headers.authorization?.split(' ')[1]; // Récupérer le token depuis l'en-tête
+        const token = req.headers.authorization?.split(' ')[1];
         let favouriteAlbums = new Set();
 
         if (token) {

@@ -16,7 +16,6 @@ if (preg_match('#^playlist/([a-zA-Z0-9]+)/edit$#', $path)) {
     $path = "editPlaylist";
 }
 
-// Routeur avec un switch
 switch ($path) {
     case '':
     case 'home':
@@ -57,7 +56,7 @@ switch ($path) {
         break;
 
 
-    default: // Page non trouvée
+    default:
         include __DIR__ . '/views/404.php';
         break;
 }

@@ -63,11 +63,9 @@
 
     async function loadAlbums() {
         try {
-            // Récupération des albums
             const albumsResponse = await fetch('http://localhost:3000/api/albums');
             const albums = await albumsResponse.json();
 
-            // Récupération des favoris si un token est disponible
             let favouriteAlbums = [];
             if (token) {
                 const favouritesResponse = await fetch('http://localhost:3000/api/favourites', {
