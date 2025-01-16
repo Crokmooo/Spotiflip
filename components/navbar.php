@@ -123,6 +123,24 @@
         }
     }
 
+    let menuTimeout;
+
+    function showMenu() {
+        clearTimeout(menuTimeout);
+        const menu = document.getElementById('profileMenu');
+        menu.classList.remove('hidden');
+        menu.classList.add('opacity-100');
+    }
+
+    function hideMenu() {
+        const menu = document.getElementById('profileMenu');
+        menuTimeout = setTimeout(() => {
+            menu.classList.add('hidden');
+            menu.classList.remove('opacity-100');
+        }, 100);
+    }
+
+
     function toggleSearchBar() {
         const searchBar = document.getElementById('searchIcon');
         const crossBar = document.getElementById('crossIcon');
