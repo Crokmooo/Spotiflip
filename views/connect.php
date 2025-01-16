@@ -31,9 +31,9 @@
             <input type="email" name="email" placeholder="Email"
                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-synthwave-dark">
             <input type="password" name="password" placeholder="Mot de passe"
-                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-synthwave-dark">
+                   class="mt-5 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-synthwave-dark">
             <button type="submit"
-                    class="text-synthwave-dark border border-synthwave-mid font-medium py-1.5 px-4 rounded-full hover:shadow-synthwave transition-all mx-auto block">
+                    class="mt-5 text-synthwave-dark border border-synthwave-mid font-medium py-1.5 px-4 rounded-full hover:shadow-synthwave transition-all mx-auto block">
                 Se connecter
             </button>
 
@@ -44,13 +44,13 @@
             <input type="text" name="username" placeholder="Nom d'utilisateur"
                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-synthwave-dark">
             <input type="text" name="gender" placeholder="Genre"
-                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-synthwave-dark">
+                   class="mt-5 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-synthwave-dark">
             <input type="email" name="email" placeholder="Email"
-                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-synthwave-dark">
+                   class="mt-5 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-synthwave-dark">
             <input type="password" name="password" placeholder="Mot de passe"
-                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-synthwave-dark">
+                   class="mt-5 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-synthwave-dark">
             <button type="submit"
-                    class="text-synthwave-dark border border-synthwave-mid font-medium py-1.5 px-4 rounded-full hover:shadow-synthwave transition-all mx-auto block">
+                    class="mt-5 text-synthwave-dark border border-synthwave-mid font-medium py-1.5 px-4 rounded-full hover:shadow-synthwave transition-all mx-auto block">
                 Créer un compte
             </button>
         </form>
